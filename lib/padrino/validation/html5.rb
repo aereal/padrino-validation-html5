@@ -26,12 +26,12 @@ module Padrino::Validation::HTML5
 			when :length
 				attrs = {}
 				if opts[:is]
-					attrs[:minlength] = attrs[:maxlength] = opts[:is].to_s
+					attrs[:minlength] = attrs[:maxlength] = opts[:is]
 				else
 					attrs[:minlength] = [opts[:minimum], opts[:within].try(:first)].compact.max
 					attrs[:maxlength] = [opts[:maximum], opts[:within].try(:last)].compact.min
 				end
-				options.reverse_merge!(attrs)
+				options.reverse_merge!(attrs.reject {|_, v| v.blank? })
 			end
 		end
 		options
