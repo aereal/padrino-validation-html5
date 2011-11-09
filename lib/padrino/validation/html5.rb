@@ -10,7 +10,7 @@ end
 
 module Padrino::Helpers::TagHelpers::HTML5
 	def identity_tag_attributes
-		super + [:readonly, :required]
+		super + [:readonly, :required, :autofocus, :novalidate, :formnovalidate, :multiple]
 	end
 end
 
