@@ -24,4 +24,15 @@ describe Padrino::Validation::HTML5 do
 				should have_tag('input', required: 'required')
 		end
 	end
+
+	context "when model has field which restricted max length" do
+		before do
+			Model.validates_length_of :name, maximum: 255
+		end
+
+		it "injects `maxlength' attribute to `input' element" do
+			form_for(Model.new, '/register') {|f| f.text_field :name }.
+				should have_tag('input', maxlength: '255')
+		end
+	end
 end

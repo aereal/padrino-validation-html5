@@ -15,9 +15,32 @@ module Padrino::Helpers::TagHelpers::HTML5
 end
 
 module Padrino::Validation::HTML5
-	def text_field(field, options={})
-		options.reverse_merge!(required: true)
-		super
+	def inject_validations(field, options={})
+		validators = object.class.validators_on(field).
+			group_by(&:kind).
+			map {|kind, validators| [kind, validators.map(&:options).inject(&:merge)] }
+		validators.each do |kind, opts|
+			case kind
+			when :presence
+				options.reverse_merge!(required: true)
+			when :length
+				attrs = {}
+				if opts[:is]
+					attrs[:minlength] = attrs[:maxlength] = opts[:is].to_s
+				else
+					attrs[:minlength] = [opts[:minimum], opts[:within].try(:first)].compact.max
+					attrs[:maxlength] = [opts[:maximum], opts[:within].try(:last)].compact.min
+				end
+				options.reverse_merge!(attrs)
+			end
+		end
+		options
+	end
+
+	def self.included(subj)
+		subj.field_types.each {|field|
+			define_method(field) {|field, options={}| options = inject_validations(field, options); super(field, options) }
+		}
 	end
 end
 
