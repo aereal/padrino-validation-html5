@@ -32,6 +32,14 @@ module Padrino::Validation::HTML5
 					attrs[:maxlength] = [opts[:maximum], opts[:within].try(:last)].compact.min
 				end
 				options.reverse_merge!(attrs.reject {|_, v| v.blank? })
+			when :inclusion
+				if opts[:in].respond_to?(:first) && opts[:in].respond_to?(:last)
+					attrs = {
+						min: opts[:in].first,
+						max: opts[:in].last
+					}
+					options.reverse_merge!(attrs.reject {|_, v| v.blank? })
+				end
 			end
 		end
 		options

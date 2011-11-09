@@ -9,13 +9,15 @@ describe Padrino::Validation::HTML5 do
 
 	before do
 		Padrino::Helpers::FormBuilder::StandardFormBuilder.send :include, Padrino::Validation::HTML5
-		class Model < ActiveModel::Base; end
+		class Model < ActiveModel::Base
+			@attrs = [:name, :age]
+			define_attribute_methods @attrs
+			attr_accessor *@attrs
+		end
 	end
 
 	context "when model has field which should be present" do
 		before do
-			Model.define_attribute_methods [:name]
-			Model.send :attr_accessor, :name
 			Model.validates_presence_of :name
 		end
 
@@ -33,6 +35,17 @@ describe Padrino::Validation::HTML5 do
 		it "injects `maxlength' attribute to `input' element" do
 			form_for(Model.new, '/register') {|f| f.text_field :name }.
 				should have_tag('input', maxlength: '255')
+		end
+	end
+
+	context "when model has field which is inclusive of any range" do
+		before do
+			Model.validates_inclusion_of :age, in: 20..30
+		end
+
+		it "injects `max' attribute to element" do
+			form_for(Model.new, '/register') {|f| f.text_field :age }.
+				should have_tag('input', max: '30', min: '20')
 		end
 	end
 end
