@@ -7,9 +7,9 @@ Gem::Specification.new do |s|
 	s.version     = Padrino::Validation::HTML5::VERSION
 	s.authors     = ["AOKI Hanae"]
 	s.email       = ["aereal@kerare.org"]
-	s.homepage    = ""
-	s.summary     = %q{TODO: Write a gem summary}
-	s.description = %q{TODO: Write a gem description}
+	s.homepage    = "https://github.com/aereal/padrino-validation-html5"
+	s.summary     = %q{automatically add client-side validations}
+	s.description = %q{automatically add client-side validations}
 
 	s.files         = `git ls-files`.split("\n")
 	s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
