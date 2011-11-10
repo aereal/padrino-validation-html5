@@ -18,9 +18,14 @@ module Padrino::Validation::HTML5
 
 	class << self
 		def registered(app)
-			app.helpers ExtendedHelpers
 			builder = Padrino::Helpers::FormBuilder.const_get(app.settings.default_builder)
 			builder.send :include, self
+			Padrino::Helpers::TagHelpers.instance_eval do
+				alias_method :__identity_tag_attributes, :identity_tag_attributes
+				def identity_tag_attributes
+					__identity_tag_attributes + [:readonly, :required, :autofocus, :novalidate, :formnovalidate, :multiple]
+				end
+			end
 		end
 
 		def included(subj)
