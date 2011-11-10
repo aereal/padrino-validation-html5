@@ -8,13 +8,28 @@ module Padrino
 	module Validation; end
 end
 
-module Padrino::Helpers::TagHelpers::HTML5
-	def identity_tag_attributes
-		super + [:readonly, :required, :autofocus, :novalidate, :formnovalidate, :multiple]
-	end
-end
-
 module Padrino::Validation::HTML5
+	module ExtendedHelpers
+		private
+		def identity_tag_attributes
+			super + [:readonly, :required, :autofocus, :novalidate, :formnovalidate, :multiple]
+		end
+	end
+
+	class << self
+		def registered(app)
+			app.helpers ExtendedHelpers
+			builder = Padrino::Helpers::FormBuilder.const_get(app.settings.default_builder)
+			builder.send :include, self
+		end
+
+		def included(subj)
+			subj.field_types.each {|field|
+				define_method(field) {|field, options={}| options = inject_validations(field, options); super(field, options) }
+			}
+		end
+	end
+
 	def inject_validations(field, options={})
 		validators = object.class.validators_on(field).
 			group_by(&:kind).
@@ -43,12 +58,6 @@ module Padrino::Validation::HTML5
 			end
 		end
 		options
-	end
-
-	def self.included(subj)
-		subj.field_types.each {|field|
-			define_method(field) {|field, options={}| options = inject_validations(field, options); super(field, options) }
-		}
 	end
 end
 

@@ -3,9 +3,9 @@
 describe Padrino::Validation::HTML5 do
 	include Padrino::Helpers::OutputHelpers
 	include Padrino::Helpers::TagHelpers
-	include Padrino::Helpers::TagHelpers::HTML5
 	include Padrino::Helpers::AssetTagHelpers
 	include Padrino::Helpers::FormHelpers
+	include Padrino::Validation::HTML5::ExtendedHelpers
 
 	before do
 		Padrino::Helpers::FormBuilder::StandardFormBuilder.send :include, Padrino::Validation::HTML5
