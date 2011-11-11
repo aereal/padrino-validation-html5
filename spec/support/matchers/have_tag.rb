@@ -37,7 +37,8 @@ RSpec::Matchers.define :have_tag do |expected_tag, options={}|
 		@document.xpath(*@query)
 	end
 
-	def xpath_escape(str)
+	def xpath_escape(strlike)
+		str = strlike.to_s
 		if str.include?("'")
 			if str.include?('"')
 				parts = str.split("'").map {|part| "'#{part}'" }
