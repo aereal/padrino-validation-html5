@@ -1,5 +1,3 @@
-require "active_model"
-
 class ActiveModel::Base
 	include ActiveModel::AttributeMethods
 	include ActiveModel::Validations

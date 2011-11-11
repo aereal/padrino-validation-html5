@@ -14,3 +14,7 @@ group :test do
 		end
 	end
 end
+
+group :development do
+	gem 'activemodel', require: 'active_model'
+end

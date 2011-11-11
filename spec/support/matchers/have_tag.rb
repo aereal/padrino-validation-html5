@@ -1,5 +1,3 @@
-require "nokogiri"
-
 RSpec::Matchers.define :have_tag do |expected_tag, options={}|
 	match do |actual|
 		@expected_tag = expected_tag
